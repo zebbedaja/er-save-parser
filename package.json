@@ -1,0 +1,42 @@
+{
+  "name": "@zebbedaja/er-save-parser",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "A parser for Elden Ring save files written in TypesScript.",
+  "author": "zebbedaja",
+  "license": "MIT",
+  "homepage": "https://github.com/zebbedaja/er-save-parser#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zebbedaja/er-save-parser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zebbedaja/er-save-parser/issues"
+  },
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "@typescript/native-preview": "7.0.0-dev.20260509.2",
+    "bumpp": "^11.1.0",
+    "prettier": "^3.8.3",
+    "tsdown": "^0.22.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}
