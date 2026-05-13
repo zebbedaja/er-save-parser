@@ -13,13 +13,13 @@ Parse Elden Ring PC save files into structured TypeScript/JavaScript objects.
 ## Installation
 
 ```bash
-npm install elden-ring-save-parser
+npm install @zebbedaja/er-save-parser
 ```
 
 ## Usage
 
 ```typescript
-import { parse, type Save, type Slot, type Character } from 'elden-ring-save-parser'
+import { parse, type Save, type Slot, type Character } from '@zebbedaja/er-save-parser'
 import { readFileSync } from 'fs'
 
 const buffer = readFileSync('ER0000.sl2').buffer
