@@ -1,11 +1,4 @@
-import {
-  arrayBuffersEqual,
-  getEventFlagState,
-  parseToMap,
-  stringToBytes,
-  toHexString,
-  trim,
-} from './util'
+import { arrayBuffersEqual, getEventFlagState, parseToMap, stringToBytes, toHexString, trim } from './util'
 import { eventFlags } from './event-flags'
 import type { ProfileSummary, Save, Slot } from './types'
 import { bstFile } from './bst-map'
@@ -33,15 +26,13 @@ export function parse(buffer: ArrayBuffer): Save {
   offset += 4
 
   if (!arrayBuffersEqual(magicBytes, new Uint8Array(stringToBytes('BND4')).buffer)) {
-    throw new Error(
-      `File type not supported, magic bytes: ${toHexString(magicBytes)} (${utf8Decoder.decode(magicBytes)})`,
-    )
+    throw new Error(`File type not supported, magic bytes: ${toHexString(magicBytes)} (${utf8Decoder.decode(magicBytes)})`)
   }
 
   save.magicBytes = toHexString(magicBytes)
 
   // Read Header
-  let headerSize = 0x2fc
+  const headerSize = 0x2fc
   offset += headerSize
 
   // Read Slots
@@ -67,7 +58,7 @@ export function parse(buffer: ArrayBuffer): Save {
       const gaitemHandle = dataView.getUint32(offset, true)
       offset += 0x4
 
-      const gaitemId = dataView.getUint32(offset, true)
+      // const gaitemId = dataView.getUint32(offset, true)
       offset += 0x4
 
       // Trick to keep the result as an unsigned int
@@ -393,7 +384,7 @@ export function parse(buffer: ArrayBuffer): Save {
   save.settings.show_recent_tabs = dataView.getUint8(offset++)
 
   offset = ACTIVE_PROFILES_START
-  save.activeProfiles = Array.from({ length: SLOT_COUNT }, (_, i) => dataView.getUint8(offset++))
+  save.activeProfiles = Array.from({ length: SLOT_COUNT }, () => dataView.getUint8(offset++))
 
   // Read Profile Summaries
   save.profileSummaries = []
