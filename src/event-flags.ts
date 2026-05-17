@@ -714,12 +714,6 @@ export const eventFlags: EventFlag[] = [
     location: 'Church of Vows',
   },
   {
-    id: 1037510800,
-    name: 'Ancient Dragon Lansseax',
-    category: 'boss',
-    location: 'Altus Plateau',
-  },
-  {
     id: 1037530800,
     name: 'Demi-Human Queen Maggie',
     category: 'boss',
@@ -806,6 +800,12 @@ export const eventFlags: EventFlag[] = [
   {
     id: 1041510800,
     name: 'Tree Sentinel Duo',
+    category: 'boss',
+    location: 'Altus Plateau',
+  },
+  {
+    id: 1041520800,
+    name: 'Ancient Dragon Lansseax',
     category: 'boss',
     location: 'Altus Plateau',
   },
