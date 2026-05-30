@@ -1,3 +1,10 @@
+/**
+ * Compare two ArrayBuffers for byte-by-byte equality.
+ * 
+ * @param buf1 - The first ArrayBuffer to compare
+ * @param buf2 - The second ArrayBuffer to compare
+ * @returns True if both buffers have identical byte content
+ */
 export function arrayBuffersEqual(buf1: ArrayBuffer, buf2: ArrayBuffer): boolean {
   if (buf1.byteLength !== buf2.byteLength) return false
 
@@ -11,10 +18,22 @@ export function arrayBuffersEqual(buf1: ArrayBuffer, buf2: ArrayBuffer): boolean
   return true
 }
 
+/**
+ * Convert a string into an array of byte values.
+ * 
+ * @param string - The string to convert
+ * @returns An array of ASCII/Unicode byte values for each character
+ */
 export function stringToBytes(string: string): number[] {
   return [...string].map((character) => character.charCodeAt(0))
 }
 
+/**
+ * Convert an ArrayBuffer to a lowercase hexadecimal string.
+ * 
+ * @param buffer - The ArrayBuffer to convert
+ * @returns A lowercase hexadecimal string representation of the buffer
+ */
 export function toHexString(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer)
   return Array.from(bytes)
@@ -22,10 +41,22 @@ export function toHexString(buffer: ArrayBuffer): string {
     .join('')
 }
 
+/**
+ * Remove all null ('\x00') characters from a string.
+ *
+ * @param text - The string to clean
+ * @returns The input string with all null ('\x00') characters removed
+ */
 export const trim = (text: string): string => {
   return text?.replaceAll('\x00', '')
 }
 
+/**
+ * Parse a string of comma-separated "key,value" pairs into a Map.
+ *
+ * @param text - A string of comma-separated "key,value" pairs, one per line
+ * @returns A Map with numeric keys and values parsed from the input
+ */
 export const parseToMap = (text: string): Map<number, number> => {
   const map = new Map()
   const lines = text.trim().split('\n')
@@ -40,6 +71,14 @@ export const parseToMap = (text: string): Map<number, number> => {
   return map
 }
 
+/**
+ * Determine whether a specific event flag is set.
+ * 
+ * @param bstMap - A map of block IDs to their binary offsets
+ * @param eventFlags - The raw event_flags byte array from the save data
+ * @param eventId - The event ID to check
+ * @returns True if the event flag is set (active), false otherwise
+ */
 export const getEventFlagState = (bstMap: Map<number, number>, eventFlags: Uint8Array, eventId: number): boolean => {
   const FLAG_DIVISOR = 1000
   const BLOCK_SIZE = 125
