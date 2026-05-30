@@ -62,7 +62,7 @@ async function parseFromFile(file: File): Promise<Save> {
 ### `Save` (root)
 | Field | Type | Description |
 |---|---|---|
-| `magicBytes` | `string` | Hex string, always `424e4434` (`BND4`) |
+| `magicBytes` | `string` | Hex string, e.g. `424e4434` (`BND4`) |
 | `checksum` | `string` | Save file checksum |
 | `version` | `number` | Save file version |
 | `steamId` | `string` | Associated Steam64 ID |
@@ -155,7 +155,7 @@ try {
 ```
 
 The parser will throw if:
-- The file magic bytes don't match `BND4`
+- The file magic bytes don't match `BND4` or `SL2\x00`
 - Event flags reference blocks not found in the BST map
 - Calculated byte positions exceed save data bounds
 

@@ -8,10 +8,6 @@ const ACTIVE_PROFILES_START = 0x1901d04
 // const PROFILE_SUMMARIES_START = 0x1901d0e
 const SLOT_COUNT = 10
 
-export function fn() {
-  return 'Hello, tsdown!'
-}
-
 export function parse(buffer: ArrayBuffer): Save {
   const dataView = new DataView(buffer)
   const utf16leDecoder = new TextDecoder('utf-16le')
@@ -25,7 +21,10 @@ export function parse(buffer: ArrayBuffer): Save {
   const magicBytes = buffer.slice(offset, offset + 4)
   offset += 4
 
-  if (!arrayBuffersEqual(magicBytes, new Uint8Array(stringToBytes('BND4')).buffer)) {
+  if (
+    !arrayBuffersEqual(magicBytes, new Uint8Array(stringToBytes('BND4')).buffer) &&
+    !arrayBuffersEqual(magicBytes, new Uint8Array(stringToBytes('SL2\x00')).buffer)
+  ) {
     throw new Error(`File type not supported, magic bytes: ${toHexString(magicBytes)} (${utf8Decoder.decode(magicBytes)})`)
   }
 

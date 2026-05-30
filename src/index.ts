@@ -1,2 +1,2 @@
-export { parse, fn } from './parser'
+export { parse } from './parser'
 export type * from './types'
