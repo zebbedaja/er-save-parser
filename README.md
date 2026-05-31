@@ -3,7 +3,7 @@
 ![CI](https://github.com/zebbedaja/er-save-parser/actions/workflows/ci.yml/badge.svg)
 ![npm version](https://img.shields.io/npm/v/@zebbedaja/er-save-parser)
 ![npm downloads](https://img.shields.io/npm/dm/@zebbedaja/er-save-parser)
-![npm bundle size](https://img.shields.io/npm/bundle/minzip/@zebbedaja/er-save-parser)
+![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/%40zebbedaja%2Fer-save-parser)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
 Parse Elden Ring PC save files into structured TypeScript/JavaScript objects.
@@ -212,6 +212,22 @@ npm run build     # Bundle with tsdown
 npm run dev       # Watch mode
 ```
 
+## TODO
+
+- Read all event flags
+- Read equipment
+- Read inventory
+
 ## License
 
 MIT
+
+## Credits
+
+- [Hapfel1/er-save-manager](https://github.com/Hapfel1/er-save-manager) — Python-based save manager/editor with GUI, backup, teleportation, and community features
+- [ClayAmore/ER-Save-Lib](https://github.com/ClayAmore/ER-Save-Lib) — Rust library for reading/writing save files with PC and PlayStation support
+- [ClayAmore/ER-Save-Editor](https://github.com/ClayAmore/ER-Save-Editor) — Full-featured Rust save editor for PC and PlayStation save files
+- [EthanShoeDev/elden-ring-compass](https://github.com/EthanShoeDev/elden-ring-compass) — React-based progress tracker with interactive map and save file polling
+- [CyberGiant7/Elden-Ring-Automatic-Checklist](https://github.com/CyberGiant7/Elden-Ring-Automatic-Checklist) — Online tool that analyzes save files to track 100% completion and missing items
+- [vawser/Smithbox](https://github.com/vawser/Smithbox) — Comprehensive modding tool for FromSoftware games with param, map, model, and material editors
+- [soulsmodding.com](https://soulsmodding.com) — FromSoftware save file documentation and reverse engineering resources
