@@ -1,11 +1,17 @@
 # ER Save Parser
 
+![CI](https://github.com/zebbedaja/er-save-parser/actions/workflows/ci.yml/badge.svg)
+![npm version](https://img.shields.io/npm/v/@zebbedaja/er-save-parser)
+![npm downloads](https://img.shields.io/npm/dm/@zebbedaja/er-save-parser)
+![npm bundle size](https://img.shields.io/npm/bundle/minzip/@zebbedaja/er-save-parser)
+![license](https://img.shields.io/badge/license-MIT-blue)
+
 Parse Elden Ring PC save files into structured TypeScript/JavaScript objects.
 
 ## Features
 
 - **Full save slot parsing** — all 10 slots with character data, attributes, Flask counts, regions visited, death count, and more
-- **Event flag decoding** — track boss defeats, quest progress, and ending states using bit-level BST map lookups
+- **Event flag decoding** — track boss defeats, quest progress, and ending states
 - **Settings extraction** — camera, audio, HDR, ray tracing, and other game settings
 - **Profile summaries** — character name, level, play time, starting gift, and archetype per slot
 - **Zero runtime dependencies** — pure ESM, no bundled dependencies
@@ -17,6 +23,10 @@ npm install @zebbedaja/er-save-parser
 ```
 
 ## Usage
+
+### Node
+
+#### TypeScript
 
 ```typescript
 import { parse, type Save, type Slot, type Character } from '@zebbedaja/er-save-parser'
@@ -48,10 +58,53 @@ slot?.eventFlags?.forEach((flag) => {
 })
 ```
 
+#### JavaScript
+
+```javascript
+import { parse } from '@zebbedaja/er-save-parser'
+import { readFileSync } from 'node:fs'
+
+const buffer = readFileSync('ER0000.sl2').buffer
+const save = parse(buffer)
+
+console.log(save.steamId)
+console.log(save.settings?.hud)
+
+const slot = save.slots?.[0]
+const char = slot?.character
+
+if (char) {
+  console.log(char.characterName)    // "Tarnished"
+  console.log(char.level)            // 150
+  console.log(char.runes)            // 1234567
+  console.log(char.strength)         // 45
+  console.log(char.faith)            // 30
+  console.log(char.arcane)           // 20
+}
+
+// Check boss defeats
+slot?.eventFlags?.forEach((flag) => {
+  if (flag.state) {
+    console.log(`${flag.name} ✓`)
+  }
+})
+```
+
 ### Reading from a file in the browser
+
+#### TypeScript
 
 ```typescript
 async function parseFromFile(file: File): Promise<Save> {
+  const buffer = await file.arrayBuffer()
+  return parse(buffer)
+}
+```
+
+#### JavaScript
+
+```javascript
+async function parseFromFile(file) {
   const buffer = await file.arrayBuffer()
   return parse(buffer)
 }
@@ -144,17 +197,7 @@ async function parseFromFile(file: File): Promise<Save> {
 
 ## Error handling
 
-```typescript
-try {
-  const save = parse(buffer)
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.error('Failed to parse save file:', error.message)
-  }
-}
-```
-
-The parser will throw if:
+The parser will throw an Error if:
 - The file magic bytes don't match `BND4` or `SL2\x00`
 - Event flags reference blocks not found in the BST map
 - Calculated byte positions exceed save data bounds
