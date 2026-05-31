@@ -1,10 +1,10 @@
 # ER Save Parser
 
 ![CI](https://github.com/zebbedaja/er-save-parser/actions/workflows/ci.yml/badge.svg)
-![npm version](https://img.shields.io/npm/v/@zebbedaja/er-save-parser)
-![npm downloads](https://img.shields.io/npm/dm/@zebbedaja/er-save-parser)
+[![npm version](https://img.shields.io/npm/v/@zebbedaja/er-save-parser)](https://www.npmjs.com/package/@zebbedaja/er-save-parser)
+[![npm downloads](https://img.shields.io/npm/dm/@zebbedaja/er-save-parser)](https://www.npmjs.com/package/@zebbedaja/er-save-parser)
 ![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/%40zebbedaja%2Fer-save-parser)
-![license](https://img.shields.io/badge/license-MIT-blue)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Parse Elden Ring PC save files into structured TypeScript/JavaScript objects.
 
