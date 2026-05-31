@@ -2,6 +2,11 @@ import { type EventFlag } from './types'
 
 export const eventFlags: EventFlag[] = [
   {
+    name: 'Playthrough Complete: Age of Fracture',
+    id: 20,
+    category: 'ending',
+  },
+  {
     name: 'Playthrough Complete: Age of Stars',
     id: 21,
     category: 'ending',
@@ -10,6 +15,111 @@ export const eventFlags: EventFlag[] = [
     name: 'Playthrough Complete: Lord of the Frenzied Flame',
     id: 22,
     category: 'ending',
+  },
+  {
+    name: 'Story: Start',
+    id: 100,
+    category: 'story',
+  },
+  {
+    name: 'Story: Reached Tutorial',
+    id: 101,
+    category: 'story',
+  },
+  {
+    name: 'Story: Reached Limgrave',
+    id: 102,
+    category: 'story',
+  },
+  {
+    name: 'Story: Reached Roundtable Hold',
+    id: 104,
+    category: 'story',
+  },
+  {
+    name: 'Story: Roundtable Hold Introduction',
+    id: 105,
+    category: 'story',
+  },
+  {
+    name: 'Story: Received the Frenzied Flame',
+    id: 108,
+    category: 'story',
+  },
+  {
+    name: 'Story: Received the Frenzied Flame (back)',
+    id: 109,
+    category: 'story',
+  },
+  {
+    name: 'Story: Reached Forge of the Giants',
+    id: 110,
+    category: 'story',
+  },
+  {
+    name: 'Story: Forge of the Giants - Melina A',
+    id: 111,
+    category: 'story',
+  },
+  {
+    name: 'Story: Forge of the Giants - Melina B',
+    id: 112,
+    category: 'story',
+  },
+  {
+    name: 'Story: Ranni',
+    id: 114,
+    category: 'story',
+  },
+  {
+    name: 'Story: Frenzied Flame Nullified',
+    id: 116,
+    category: 'story',
+  },
+  {
+    name: 'Story: Erdtree on Fire',
+    id: 118,
+    category: 'story',
+  },
+  {
+    name: 'Story: Watched Ending',
+    id: 120,
+    category: 'story',
+  },
+  {
+    name: "Acquired Godrick's Great Rune",
+    id: 191,
+    category: 'great-rune',
+  },
+  {
+    name: "Acquired Radahn's Great Rune",
+    id: 192,
+    category: 'great-rune',
+  },
+  {
+    name: "Acquired Morgott's Great Rune",
+    id: 193,
+    category: 'great-rune',
+  },
+  {
+    name: "Acquired Rykard's Great Rune",
+    id: 194,
+    category: 'great-rune',
+  },
+  {
+    name: "Acquired Mohg's Great Rune",
+    id: 195,
+    category: 'great-rune',
+  },
+  {
+    name: "Acquired Malenia's Great Rune",
+    id: 196,
+    category: 'great-rune',
+  },
+  {
+    name: 'Acquired Great Rune of the Unborn',
+    id: 197,
+    category: 'great-rune',
   },
   {
     id: 10000800,

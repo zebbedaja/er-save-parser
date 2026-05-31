@@ -241,7 +241,7 @@ export function parse(buffer: ArrayBuffer): Save {
     }
     slot.regions = {}
     slot.regions.regionCount = regionCount
-    // slot.regions.regionIds = regionIds
+    slot.regions.regionIds = regionIds
 
     // Skip Torrent Data
     offset += 40

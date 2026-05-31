@@ -52,17 +52,18 @@ export const trim = (text: string): string => {
 }
 
 /**
- * Parse a string of comma-separated "key,value" pairs into a Map.
+ * Parse a string of delimiter-separated "key,value" pairs into a Map.
  *
- * @param text - A string of comma-separated "key,value" pairs, one per line
+ * @param text - A string of delimiter-separated pairs, one per line
+ * @param delimiter - The character separating key and value (default: ",")
  * @returns A Map with numeric keys and values parsed from the input
  */
-export const parseToMap = (text: string): Map<number, number> => {
+export const parseToMap = (text: string, delimiter: string = ','): Map<number, number> => {
   const map = new Map()
   const lines = text.trim().split('\n')
 
   for (const line of lines) {
-    const [key, value] = line.trim().split(',')
+    const [key, value] = line.trim().split(delimiter)
     if (key && value !== undefined) {
       map.set(Number(key), Number(value))
     }

@@ -99,6 +99,21 @@ describe('parseToMap', () => {
     const result = parseToMap('42,999')
     expect(result).toEqual(new Map([[42, 999]]))
   })
+
+  test('uses comma as default delimiter', () => {
+    const result = parseToMap('1,100\n2,200')
+    expect(result).toEqual(new Map([[1, 100], [2, 200]]))
+  })
+
+  test('parses with custom semicolon delimiter', () => {
+    const result = parseToMap('1;100\n2;200', ';')
+    expect(result).toEqual(new Map([[1, 100], [2, 200]]))
+  })
+
+  test('parses with custom pipe delimiter', () => {
+    const result = parseToMap('1|100|300\n2|200\n3|300', '|')
+    expect(result).toEqual(new Map([[1, 100], [2, 200], [3, 300]]))
+  })
 })
 
 describe('getEventFlagState', () => {
