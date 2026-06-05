@@ -3,7 +3,7 @@ import { parse } from '../src'
 
 describe('parse', () => {
   const BAD_BUFFER = new ArrayBuffer(0x1ba03d0)
-  
+
   const GOOD_BUFFER_1 = new ArrayBuffer(0x1ba03d0)
   const GOOD_BUFFER_1_VIEW = new Uint8Array(GOOD_BUFFER_1)
   GOOD_BUFFER_1_VIEW.set([0x42, 0x4e, 0x44, 0x34]) // BND4
@@ -14,7 +14,7 @@ describe('parse', () => {
 
   test('test file type', () => {
     expect(() => parse(BAD_BUFFER)).toThrow(/File type not supported/)
-    expect(parse(GOOD_BUFFER_1)).toBeTypeOf("object")
-    expect(parse(GOOD_BUFFER_2)).toBeTypeOf("object")
+    expect(parse(GOOD_BUFFER_1)).toBeTypeOf('object')
+    expect(parse(GOOD_BUFFER_2)).toBeTypeOf('object')
   })
 })

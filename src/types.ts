@@ -1,3 +1,9 @@
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'none'
+
+export interface ParseOptions {
+  logLevel?: LogLevel
+}
+
 export interface Save {
   magicBytes?: string
   checksum?: string

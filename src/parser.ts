@@ -1,6 +1,7 @@
 import { arrayBuffersEqual, getEventFlagState, parseToMap, stringToBytes, toHexString, trim } from './util'
 import { eventFlags } from './event-flags'
-import type { ProfileSummary, Save, Slot } from './types'
+import type { ParseOptions, ProfileSummary, Save, Slot } from './types'
+import { createLogger } from './logger'
 import { bstFile } from './bst-map'
 
 const USER_10_DATA_START = 0x19003a0
@@ -8,7 +9,19 @@ const ACTIVE_PROFILES_START = 0x1901d04
 // const PROFILE_SUMMARIES_START = 0x1901d0e
 const SLOT_COUNT = 10
 
-export function parse(buffer: ArrayBuffer): Save {
+/**
+ * Parse an Elden Ring save file buffer.
+ * 
+ * @param buffer - The ArrayBuffer containing the save file data
+ * @param options - Optional configuration for parsing
+ * @param options.logLevel - Log level threshold: 'debug', 'info', 'warn', 'error', or 'none'. Defaults to 'error'
+ * @returns A Save object containing parsed slot and profile data
+ */
+export function parse(
+  buffer: ArrayBuffer,
+  options: ParseOptions = { logLevel: 'error' }
+): Save {
+  const logger = createLogger(options.logLevel)
   const dataView = new DataView(buffer)
   const utf16leDecoder = new TextDecoder('utf-16le')
   const utf8Decoder = new TextDecoder('utf-8')
@@ -37,6 +50,8 @@ export function parse(buffer: ArrayBuffer): Save {
   // Read Slots
   save.slots = []
   for (let i = 0; i < SLOT_COUNT; i++) {
+    logger.debug(`Parsing slot ${i}`)
+
     offset = 0x300 + i * 0x280010
 
     const slot: Slot = {}
@@ -53,6 +68,7 @@ export function parse(buffer: ArrayBuffer): Save {
     offset += 24
 
     // Read GaItems
+    logger.debug(`Reading GaItems for slot ${i}`)
     for (let i = 0; i < 0x1400; i++) {
       const gaitemHandle = dataView.getUint32(offset, true)
       offset += 0x4
@@ -73,6 +89,7 @@ export function parse(buffer: ArrayBuffer): Save {
     }
 
     // Read Character
+    logger.debug(`Reading character data for slot ${i}`)
     slot.character = {}
     slot.character.unk0x0 = dataView.getUint32(offset, true)
     offset += 4
@@ -312,6 +329,7 @@ export function parse(buffer: ArrayBuffer): Save {
     offset += 4
 
     // Read Event Flags
+    logger.debug(`Reading event flags for slot ${i} with offset ${offset}`)
     const EVENT_FLAGS_SIZE = 0x1bf99f
     const eventFlagUint8Array = new Uint8Array(buffer, offset, EVENT_FLAGS_SIZE)
 
@@ -332,6 +350,7 @@ export function parse(buffer: ArrayBuffer): Save {
   }
 
   // Read User_10 Data
+  logger.debug('Reading User_10 data')
   offset = USER_10_DATA_START
 
   save.checksum = toHexString(buffer.slice(offset, offset + 0x10))
@@ -344,6 +363,7 @@ export function parse(buffer: ArrayBuffer): Save {
   offset += 0x8
 
   // Read Settings
+  logger.debug('Reading settings')
   save.settings = {}
   save.settings.cameraSpeed = dataView.getUint8(offset++)
   save.settings.controllerVibration = dataView.getUint8(offset++)
@@ -386,6 +406,7 @@ export function parse(buffer: ArrayBuffer): Save {
   save.activeProfiles = Array.from({ length: SLOT_COUNT }, () => dataView.getUint8(offset++))
 
   // Read Profile Summaries
+  logger.debug('Reading profile summaries')
   save.profileSummaries = []
   for (let i = 0; i < SLOT_COUNT; i++) {
     const profileSummary: ProfileSummary = {}
