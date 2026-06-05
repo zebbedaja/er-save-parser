@@ -10,7 +10,7 @@ const levelValues: Record<LogLevel, number> = {
 
 /**
  * Factory for creating a logger instance with the specified log level threshold.
- * 
+ *
  * @param level - The minimum log level to output. Defaults to 'error'
  * @returns A logger object with debug, info, warn, and error methods
  */

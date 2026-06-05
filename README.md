@@ -33,7 +33,13 @@ import { parse, type Save, type Slot, type Character } from '@zebbedaja/er-save-
 import { readFileSync } from 'fs'
 
 const buffer = readFileSync('ER0000.sl2').buffer
+
+// Default: only errors are logged (logLevel: 'error')
 const save: Save = parse(buffer)
+
+// Optional: configure logging with one of 'debug', 'info', 'warn', 'error', 'none'
+// const save: Save = parse(buffer, { logLevel: 'debug' }) // Verbose progress logs
+// const save: Save = parse(buffer, { logLevel: 'none' })   // Silent
 
 console.log(save.steamId)
 console.log(save.settings?.hud)
@@ -65,7 +71,13 @@ import { parse } from '@zebbedaja/er-save-parser'
 import { readFileSync } from 'node:fs'
 
 const buffer = readFileSync('ER0000.sl2').buffer
+
+// Default: only errors are logged (logLevel: 'error')
 const save = parse(buffer)
+
+// Optional: configure logging with one of 'debug', 'info', 'warn', 'error', 'none'
+// const save = parse(buffer, { logLevel: 'debug' }) // Verbose progress logs
+// const save = parse(buffer, { logLevel: 'none' })   // Silent
 
 console.log(save.steamId)
 console.log(save.settings?.hud)

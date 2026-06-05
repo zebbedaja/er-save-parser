@@ -11,16 +11,13 @@ const SLOT_COUNT = 10
 
 /**
  * Parse an Elden Ring save file buffer.
- * 
+ *
  * @param buffer - The ArrayBuffer containing the save file data
  * @param options - Optional configuration for parsing
  * @param options.logLevel - Log level threshold: 'debug', 'info', 'warn', 'error', or 'none'. Defaults to 'error'
  * @returns A Save object containing parsed slot and profile data
  */
-export function parse(
-  buffer: ArrayBuffer,
-  options: ParseOptions = { logLevel: 'error' }
-): Save {
+export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: 'error' }): Save {
   const logger = createLogger(options.logLevel)
   const dataView = new DataView(buffer)
   const utf16leDecoder = new TextDecoder('utf-16le')
