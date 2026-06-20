@@ -1,12 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import {
-  arrayBuffersEqual,
-  stringToBytes,
-  toHexString,
-  trim,
-  parseToMap,
-  getEventFlagState
-} from '../src/util'
+import { arrayBuffersEqual, stringToBytes, toHexString, trim, parseToMap, getEventFlagState, getEventIdFromPosition } from '../src/util'
+import { bstFile } from '../src/bst-map'
 
 describe('arrayBuffersEqual', () => {
   test('returns true for identical buffers', () => {
@@ -83,7 +77,13 @@ describe('trim', () => {
 describe('parseToMap', () => {
   test('parses valid multi-line input', () => {
     const result = parseToMap('1,100\n2,200\n3,300')
-    expect(result).toEqual(new Map([[1, 100], [2, 200], [3, 300]]))
+    expect(result).toEqual(
+      new Map([
+        [1, 100],
+        [2, 200],
+        [3, 300],
+      ]),
+    )
   })
 
   test('returns empty map for empty input', () => {
@@ -92,7 +92,12 @@ describe('parseToMap', () => {
 
   test('skips malformed lines', () => {
     const result = parseToMap('1,100\nbadline\n2,200')
-    expect(result).toEqual(new Map([[1, 100], [2, 200]]))
+    expect(result).toEqual(
+      new Map([
+        [1, 100],
+        [2, 200],
+      ]),
+    )
   })
 
   test('parses single entry', () => {
@@ -102,17 +107,33 @@ describe('parseToMap', () => {
 
   test('uses comma as default delimiter', () => {
     const result = parseToMap('1,100\n2,200')
-    expect(result).toEqual(new Map([[1, 100], [2, 200]]))
+    expect(result).toEqual(
+      new Map([
+        [1, 100],
+        [2, 200],
+      ]),
+    )
   })
 
   test('parses with custom semicolon delimiter', () => {
     const result = parseToMap('1;100\n2;200', ';')
-    expect(result).toEqual(new Map([[1, 100], [2, 200]]))
+    expect(result).toEqual(
+      new Map([
+        [1, 100],
+        [2, 200],
+      ]),
+    )
   })
 
   test('parses with custom pipe delimiter', () => {
     const result = parseToMap('1|100|300\n2|200\n3|300', '|')
-    expect(result).toEqual(new Map([[1, 100], [2, 200], [3, 300]]))
+    expect(result).toEqual(
+      new Map([
+        [1, 100],
+        [2, 200],
+        [3, 300],
+      ]),
+    )
   })
 })
 
@@ -154,5 +175,12 @@ describe('getEventFlagState', () => {
     const eventFlags = new Uint8Array([0x00, 0x80])
     expect(getEventFlagState(bstMap, eventFlags, 8)).toBe(true)
     expect(getEventFlagState(bstMap, eventFlags, 0)).toBe(false)
+  })
+})
+
+describe('getEventIdFromPosition with real bst Map', () => {
+  test('returns the correct id value for byte position and bit index', () => {
+    const bstMap = parseToMap(bstFile)
+    expect(getEventIdFromPosition(bstMap, 153225, 7)).toBe(2049440800)
   })
 })

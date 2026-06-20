@@ -1,3 +1,5 @@
+import { bstFile } from './bst-map'
+
 /**
  * Compare two ArrayBuffers for byte-by-byte equality.
  *
@@ -73,6 +75,15 @@ export const parseToMap = (text: string, delimiter: string = ','): Map<number, n
 }
 
 /**
+ * Returns tha Bst Map as a Map
+ *
+ * @returns Bst Map as Map
+ */
+export const getBstMap = (): Map<number, number> => {
+  return parseToMap(bstFile)
+}
+
+/**
  * Determine whether a specific event flag is set.
  *
  * @param bstMap - A map of block IDs to their binary offsets
@@ -104,4 +115,32 @@ export const getEventFlagState = (bstMap: Map<number, number>, eventFlags: Uint8
 
   const eventByte = eventFlags[bytePos]
   return ((eventByte >> bitIndex) & 1) === 1
+}
+
+/**
+ * Determine the event ID from a byte position and bit index.
+ *
+ * @param bstMap - A map of block IDs to their binary offsets
+ * @param bytePos - The byte position in the event_flags array
+ * @param bitIndex - The bit index within the byte (0-7)
+ * @returns The event ID corresponding to the given position
+ */
+export const getEventIdFromPosition = (bstMap: Map<number, number>, bytePos: number, bitIndex: number): number => {
+  const FLAG_DIVISOR = 1000
+  const BLOCK_SIZE = 125
+
+  // Reverse the bit index flip
+  const originalBitIndex = 7 - bitIndex
+
+  // Find the block whose offset contains this bytePos
+  for (const [block, offsetIndex] of bstMap) {
+    const offset = offsetIndex * BLOCK_SIZE
+    if (bytePos >= offset && bytePos < offset + BLOCK_SIZE) {
+      const byteIndex = bytePos - offset
+      const index = byteIndex * 8 + originalBitIndex
+      return block * FLAG_DIVISOR + index
+    }
+  }
+
+  throw new Error(`Byte position ${bytePos} not found in any known block`)
 }

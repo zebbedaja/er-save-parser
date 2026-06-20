@@ -1,8 +1,7 @@
-import { arrayBuffersEqual, getEventFlagState, parseToMap, stringToBytes, toHexString, trim } from './util'
+import { arrayBuffersEqual, getBstMap, getEventFlagState, stringToBytes, toHexString, trim } from './util'
 import { eventFlags } from './event-flags'
 import type { ParseOptions, ProfileSummary, Save, Slot } from './types'
 import { createLogger } from './logger'
-import { bstFile } from './bst-map'
 
 const USER_10_DATA_START = 0x19003a0
 const ACTIVE_PROFILES_START = 0x1901d04
@@ -15,9 +14,10 @@ const SLOT_COUNT = 10
  * @param buffer - The ArrayBuffer containing the save file data
  * @param options - Optional configuration for parsing
  * @param options.logLevel - Log level threshold: 'debug', 'info', 'warn', 'error', or 'none'. Defaults to 'error'
+ * @param options.includeEventFlagUInt8Array - Includes the raw event flag array data
  * @returns A Save object containing parsed slot and profile data
  */
-export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: 'error' }): Save {
+export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: 'error', includeEventFlagUInt8Array: false }): Save {
   const logger = createLogger(options.logLevel)
   const dataView = new DataView(buffer)
   const utf16leDecoder = new TextDecoder('utf-16le')
@@ -330,7 +330,7 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     const EVENT_FLAGS_SIZE = 0x1bf99f
     const eventFlagUint8Array = new Uint8Array(buffer, offset, EVENT_FLAGS_SIZE)
 
-    const bstMap = parseToMap(bstFile)
+    const bstMap = getBstMap()
 
     const slotEventFlags = []
 
@@ -341,7 +341,12 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     }
 
     slot.eventFlags = slotEventFlags
-    offset += 0x1bf99f
+
+    if (options.includeEventFlagUInt8Array) {
+      slot.eventFlagUint8Array = eventFlagUint8Array
+    }
+
+    offset += EVENT_FLAGS_SIZE
 
     save.slots?.push(slot)
   }

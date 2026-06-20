@@ -2,6 +2,7 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'none'
 
 export interface ParseOptions {
   logLevel?: LogLevel
+  includeEventFlagUInt8Array?: boolean
 }
 
 export interface Save {
@@ -80,6 +81,7 @@ export interface Slot {
   notAloneFlag?: number
   inGameCountdownTimer?: number
   eventFlags?: EventFlag[]
+  eventFlagUint8Array?: Uint8Array
 }
 
 export interface Character {
