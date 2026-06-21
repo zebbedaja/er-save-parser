@@ -146,3 +146,10 @@ export interface EventFlag {
   location?: string
   state?: boolean
 }
+
+export interface BitDifference {
+  offset: number
+  bitIndex: number // 0 = LSB, 7 = MSB
+  oldBit: 0 | 1
+  newBit: 0 | 1
+}

@@ -1,4 +1,5 @@
 import { bstFile } from './bst-map'
+import type { BitDifference } from './types'
 
 /**
  * Compare two ArrayBuffers for byte-by-byte equality.
@@ -143,4 +144,51 @@ export const getEventIdFromPosition = (bstMap: Map<number, number>, bytePos: num
   }
 
   throw new Error(`Byte position ${bytePos} not found in any known block`)
+}
+
+/**
+ * Compares two Uint8Arrays and returns all bit-level differences.
+ *
+ * Arrays of different lengths are supported — missing bytes in the shorter
+ * array are treated as `0`.
+ *
+ * @param a - The original Uint8Array.
+ * @param b - The Uint8Array to compare against.
+ * @returns An array of {@link BitDifference} objects, one per differing bit.
+ *
+ * @example
+ * const a = new Uint8Array([0b00001111, 0b11110000]);
+ * const b = new Uint8Array([0b00001111, 0b10110001]);
+ *
+ * const diffs = compareUint8Arrays(a, b);
+ * // [
+ * //   { offset: 1, bitIndex: 0, oldBit: 0, newBit: 1 },
+ * //   { offset: 1, bitIndex: 6, oldBit: 1, newBit: 0 },
+ * // ]
+ */
+export const compareUint8Arrays = (a: Uint8Array, b: Uint8Array): BitDifference[] => {
+  const differences: BitDifference[] = []
+  const length = Math.max(a.length, b.length)
+
+  for (let offset = 0; offset < length; offset++) {
+    const byteA = offset < a.length ? a[offset] : 0
+    const byteB = offset < b.length ? b[offset] : 0
+
+    if (byteA !== byteB) {
+      const xor = byteA ^ byteB
+
+      for (let bitIndex = 0; bitIndex < 8; bitIndex++) {
+        if (xor & (1 << bitIndex)) {
+          differences.push({
+            offset,
+            bitIndex,
+            oldBit: ((byteA >> bitIndex) & 1) as 0 | 1,
+            newBit: ((byteB >> bitIndex) & 1) as 0 | 1,
+          })
+        }
+      }
+    }
+  }
+
+  return differences
 }

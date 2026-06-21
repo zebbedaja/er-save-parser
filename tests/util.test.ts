@@ -1,5 +1,14 @@
 import { describe, expect, test } from 'vitest'
-import { arrayBuffersEqual, stringToBytes, toHexString, trim, parseToMap, getEventFlagState, getEventIdFromPosition } from '../src/util'
+import {
+  arrayBuffersEqual,
+  stringToBytes,
+  toHexString,
+  trim,
+  parseToMap,
+  getEventFlagState,
+  getEventIdFromPosition,
+  compareUint8Arrays,
+} from '../src/util'
 import { bstFile } from '../src/bst-map'
 
 describe('arrayBuffersEqual', () => {
@@ -182,5 +191,81 @@ describe('getEventIdFromPosition with real bst Map', () => {
   test('returns the correct id value for byte position and bit index', () => {
     const bstMap = parseToMap(bstFile)
     expect(getEventIdFromPosition(bstMap, 153225, 7)).toBe(2049440800)
+  })
+})
+
+const bits = (str: string) => new Uint8Array([parseInt(str, 2)])
+
+describe('compareUint8Arrays', () => {
+  describe('identical arrays', () => {
+    test('returns no differences for identical single-byte arrays', () => {
+      expect(compareUint8Arrays(bits('00001111'), bits('00001111'))).toEqual([])
+    })
+
+    test('returns no differences for identical multi-byte arrays', () => {
+      const a = new Uint8Array([0x00, 0xff, 0xab])
+      expect(compareUint8Arrays(a, a)).toEqual([])
+    })
+
+    test('returns no differences for two empty arrays', () => {
+      expect(compareUint8Arrays(new Uint8Array(), new Uint8Array())).toEqual([])
+    })
+  })
+
+  describe('single bit changes', () => {
+    test('detects a change in bit 0 (LSB)', () => {
+      expect(compareUint8Arrays(bits('00000000'), bits('00000001'))).toEqual([{ offset: 0, bitIndex: 0, oldBit: 0, newBit: 1 }])
+    })
+
+    test('detects a change in bit 7 (MSB)', () => {
+      expect(compareUint8Arrays(bits('00000000'), bits('10000000'))).toEqual([{ offset: 0, bitIndex: 7, oldBit: 0, newBit: 1 }])
+    })
+
+    test('detects a change in an inner bit', () => {
+      expect(compareUint8Arrays(bits('00000000'), bits('00010000'))).toEqual([{ offset: 0, bitIndex: 4, oldBit: 0, newBit: 1 }])
+    })
+  })
+
+  describe('multiple bit changes', () => {
+    test('detects all changed bits within a single byte', () => {
+      expect(compareUint8Arrays(bits('11110000'), bits('10110001'))).toEqual([
+        { offset: 0, bitIndex: 0, oldBit: 0, newBit: 1 },
+        { offset: 0, bitIndex: 6, oldBit: 1, newBit: 0 },
+      ])
+    })
+
+    test('detects changes across multiple bytes', () => {
+      const a = new Uint8Array([0b00000000, 0b11111111])
+      const b = new Uint8Array([0b00000001, 0b11111110])
+
+      expect(compareUint8Arrays(a, b)).toEqual([
+        { offset: 0, bitIndex: 0, oldBit: 0, newBit: 1 },
+        { offset: 1, bitIndex: 0, oldBit: 1, newBit: 0 },
+      ])
+    })
+
+    test('reports the correct offset for a change in a later byte', () => {
+      const a = new Uint8Array([0x00, 0x00, 0b00000001])
+      const b = new Uint8Array([0x00, 0x00, 0b00000000])
+
+      expect(compareUint8Arrays(a, b)).toEqual([{ offset: 2, bitIndex: 0, oldBit: 1, newBit: 0 }])
+    })
+  })
+
+  describe('arrays of different lengths', () => {
+    test('treats missing bytes in the shorter array as 0', () => {
+      const a = new Uint8Array([0x00])
+      const b = new Uint8Array([0x00, 0b00000001])
+
+      expect(compareUint8Arrays(a, b)).toEqual([{ offset: 1, bitIndex: 0, oldBit: 0, newBit: 1 }])
+    })
+
+    test('handles an empty first array', () => {
+      expect(compareUint8Arrays(new Uint8Array(), bits('00000001'))).toEqual([{ offset: 0, bitIndex: 0, oldBit: 0, newBit: 1 }])
+    })
+
+    test('handles an empty second array', () => {
+      expect(compareUint8Arrays(bits('00000001'), new Uint8Array())).toEqual([{ offset: 0, bitIndex: 0, oldBit: 1, newBit: 0 }])
+    })
   })
 })
