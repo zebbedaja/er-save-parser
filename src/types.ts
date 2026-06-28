@@ -157,11 +157,11 @@ export interface BitDifference {
 }
 
 export interface Offset {
-  bytePos: number,
+  bytePos: number
   bitIndex: number
 }
 
 export interface MapName {
-  id: string,
+  id: string
   name: string
 }
