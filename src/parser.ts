@@ -1,4 +1,4 @@
-import { arrayBuffersEqual, getBstMap, getEventFlagState, stringToBytes, toHexString, trim } from './util'
+import { arrayBuffersEqual, getBstMap, getEventFlagState, getMapNameFromBytes, stringToBytes, toHexString, trim } from './util'
 import { eventFlags } from './event-flags'
 import type { ParseOptions, ProfileSummary, Save, Slot } from './types'
 import { createLogger } from './logger'
@@ -59,6 +59,7 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     offset += 0x4
 
     slot.mapId = toHexString(buffer.slice(offset, offset + 0x4))
+    slot.mapName = getMapNameFromBytes(new Uint8Array(buffer, offset, 0x4))
     offset += 0x4
 
     // Skip Header
@@ -428,6 +429,7 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     offset += 4
 
     profileSummary.mapId = toHexString(buffer.slice(offset, offset + 4))
+    profileSummary.mapName = getMapNameFromBytes(new Uint8Array(buffer, offset, 0x4))
     offset += 4
 
     profileSummary.unk0x34 = dataView.getUint32(offset, true)

@@ -10,6 +10,7 @@ import {
   getEventFlagOffset,
   compareUint8Arrays,
   getBstMap,
+  getMapNameFromBytes,
 } from '../src/util'
 
 describe('arrayBuffersEqual', () => {
@@ -328,5 +329,37 @@ describe('compareUint8Arrays', () => {
     test('handles an empty second array', () => {
       expect(compareUint8Arrays(bits('00000001'), new Uint8Array())).toEqual([{ offset: 0, bitIndex: 0, oldBit: 1, newBit: 0 }])
     })
+  })
+})
+
+describe('getMapNameFromBytes', () => {
+  test('returns correct name for known map (Limgrave - Siofra River Well)', () => {
+    const bytes = new Uint8Array([0, 37, 45, 60])
+    const result = getMapNameFromBytes(bytes)
+    expect(result).toBe("Limgrave - Siofra River Well, Mistwood Ruins, Minor Erdtree, Nokron Entrance")
+  })
+
+  test('returns correct name for Stormveil Castle', () => {
+    const bytes = new Uint8Array([0, 0, 0, 10])
+    const result = getMapNameFromBytes(bytes)
+    expect(result).toBe("Stormveil Castle")
+  })
+
+  test('returns null for unknown map bytes', () => {
+    const bytes = new Uint8Array([0, 0, 0, 99])
+    const result = getMapNameFromBytes(bytes)
+    expect(result).toBe(undefined)
+  })
+
+  test('returns null for short array', () => {
+    const bytes = new Uint8Array([0, 0, 0])
+    const result = getMapNameFromBytes(bytes)
+    expect(result).toBe(undefined)
+  })
+
+  test('returns null for empty array', () => {
+    const bytes = new Uint8Array([])
+    const result = getMapNameFromBytes(bytes)
+    expect(result).toBe(undefined)
   })
 })
