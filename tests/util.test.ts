@@ -7,9 +7,10 @@ import {
   parseToMap,
   getEventFlagState,
   getEventIdFromPosition,
+  getEventFlagOffset,
   compareUint8Arrays,
+  getBstMap,
 } from '../src/util'
-import { bstFile } from '../src/bst-map'
 
 describe('arrayBuffersEqual', () => {
   test('returns true for identical buffers', () => {
@@ -187,10 +188,70 @@ describe('getEventFlagState', () => {
   })
 })
 
-describe('getEventIdFromPosition with real bst Map', () => {
-  test('returns the correct id value for byte position and bit index', () => {
-    const bstMap = parseToMap(bstFile)
-    expect(getEventIdFromPosition(bstMap, 153225, 7)).toBe(2049440800)
+describe('getEventFlagOffset', () => {
+  test('returns correct bytePos and bitIndex for eventId 0 in block 0', () => {
+    const bstMap = new Map([[0, 0]])
+    expect(getEventFlagOffset(bstMap, 0)).toEqual({ bytePos: 0, bitIndex: 7 })
+  })
+
+  test('bitIndex counts down from 7 to 0 for eventIds 0-7', () => {
+    const bstMap = new Map([[0, 0]])
+    for (let i = 0; i < 8; i++) {
+      const result = getEventFlagOffset(bstMap, i)
+      expect(result.bytePos).toBe(0)
+      expect(result.bitIndex).toBe(7 - i)
+    }
+  })
+
+  test('eventId 128 (0x80 hex) maps to bytePos 16, bitIndex 7', () => {
+    const bstMap = new Map([[0, 0]])
+    expect(getEventFlagOffset(bstMap, 128)).toEqual({ bytePos: 16, bitIndex: 7 })
+  })
+
+  test('bytePos increments when crossing byte boundary at eventId 8', () => {
+    const bstMap = new Map([[0, 0]])
+    expect(getEventFlagOffset(bstMap, 8)).toEqual({ bytePos: 1, bitIndex: 7 })
+  })
+
+  test('block offset is applied correctly for cross-block eventIds', () => {
+    const bstMap = new Map([[0, 0], [1, 1]])
+    const result0 = getEventFlagOffset(bstMap, 0)
+    const result1 = getEventFlagOffset(bstMap, 1000)
+    expect(result1.bytePos - result0.bytePos).toBe(125)
+    expect(result1.bitIndex).toBe(result0.bitIndex)
+  })
+
+  test('throws when block is missing from BST', () => {
+    const bstMap = new Map<number, number>()
+    expect(() => getEventFlagOffset(bstMap, 0)).toThrow(/Event ID 0 \(block 0\) not found in BST/)
+  })
+
+  test('throws with correct block number in error message', () => {
+    const bstMap = new Map([[0, 0]])
+    expect(() => getEventFlagOffset(bstMap, 9999)).toThrow(/Event ID 9999 \(block 9\) not found in BST/)
+  })
+
+  test('round-trips with getEventIdFromPosition for all eventIds in block 0', () => {
+    const bstMap = new Map([[0, 0]])
+    for (let id = 0; id < 1000; id++) {
+      const offset = getEventFlagOffset(bstMap, id)
+      const roundtrip = getEventIdFromPosition(bstMap, offset.bytePos, offset.bitIndex)
+      expect(roundtrip).toBe(id)
+    }
+  })
+
+  test('returns correct offset with real BST map', () => {
+    const bstMap = getBstMap()
+    const result = getEventFlagOffset(bstMap, 0)
+    expect(result).toEqual({ bytePos: 0, bitIndex: 7 })
+  })
+
+  test('round-trips with real BST map for eventId from known position', () => {
+    const bstMap = getBstMap()
+    const eventId = 2049440800
+    const offset = getEventFlagOffset(bstMap, eventId)
+    const roundtrip = getEventIdFromPosition(bstMap, offset.bytePos, offset.bitIndex)
+    expect(roundtrip).toBe(eventId)
   })
 })
 

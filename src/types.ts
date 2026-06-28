@@ -61,6 +61,7 @@ export interface ProfileSummary {
   secondsPlayed?: number
   runesMemory?: number
   mapId?: string
+  mapName?: string
   unk0x34?: number
   bodyType?: number
   archetype?: number
@@ -71,6 +72,7 @@ export interface Slot {
   checksum?: string
   version?: number
   mapId?: string
+  mapName?: string
   character?: Character
   regions?: { regionCount?: number; regionIds?: number[] }
   totalDeathCount?: number
