@@ -1,4 +1,4 @@
-export const bstFile = `1045540,6223
+export const bstFile: string = `1045540,6223
 1037495,3951
 1033472,2815
 1031460,2247

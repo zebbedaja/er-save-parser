@@ -153,3 +153,13 @@ export interface BitDifference {
   oldBit: 0 | 1
   newBit: 0 | 1
 }
+
+export interface Offset {
+  bytePos: number,
+  bitIndex: number
+}
+
+export interface MapName {
+  id: string,
+  name: string
+}

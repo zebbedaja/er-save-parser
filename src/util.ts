@@ -1,5 +1,5 @@
 import { bstFile } from './bst-map'
-import type { BitDifference } from './types'
+import type { BitDifference, Offset } from './types'
 
 /**
  * Compare two ArrayBuffers for byte-by-byte equality.
@@ -85,14 +85,13 @@ export const getBstMap = (): Map<number, number> => {
 }
 
 /**
- * Determine whether a specific event flag is set.
+ * Returns offset and bit index of event flag in event flag array
  *
  * @param bstMap - A map of block IDs to their binary offsets
- * @param eventFlags - The raw event_flags byte array from the save data
  * @param eventId - The event ID to check
- * @returns True if the event flag is set (active), false otherwise
+ * @returns Offset and bit index of event flag in event flag array
  */
-export const getEventFlagState = (bstMap: Map<number, number>, eventFlags: Uint8Array, eventId: number): boolean => {
+export const getEventFlagOffset = (bstMap: Map<number, number>, eventId: number): Offset => {
   const FLAG_DIVISOR = 1000
   const BLOCK_SIZE = 125
 
@@ -110,12 +109,29 @@ export const getEventFlagState = (bstMap: Map<number, number>, eventFlags: Uint8
 
   const bytePos = offset + byteIndex
 
-  if (bytePos >= eventFlags.length) {
-    throw new Error(`Calculated byte position ${bytePos} exceeds event_flags size`)
+  return {
+    bytePos,
+    bitIndex,
+  }
+}
+
+/**
+ * Determine whether a specific event flag is set.
+ *
+ * @param bstMap - A map of block IDs to their binary offsets
+ * @param eventFlags - The raw event_flags byte array from the save data
+ * @param eventId - The event ID to check
+ * @returns True if the event flag is set (active), false otherwise
+ */
+export const getEventFlagState = (bstMap: Map<number, number>, eventFlags: Uint8Array, eventId: number): boolean => {
+  const offset = getEventFlagOffset(bstMap, eventId)
+
+  if (offset.bytePos >= eventFlags.length) {
+    throw new Error(`Calculated byte position ${offset.bytePos} exceeds event_flags size`)
   }
 
-  const eventByte = eventFlags[bytePos]
-  return ((eventByte >> bitIndex) & 1) === 1
+  const eventByte = eventFlags[offset.bytePos]
+  return ((eventByte >> offset.bitIndex) & 1) === 1
 }
 
 /**
