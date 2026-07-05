@@ -1219,6 +1219,7 @@ export const eventFlags: EventFlag[] = [
   { id: 31190604, name: "Illusory Wall: Sage's Cave #4", category: 'illusoryWall', location: 'Mt. Gelmir' },
   { id: 31190601, name: "Illusory Wall: Sage's Cave #5", category: 'illusoryWall', location: 'Mt. Gelmir' },
   { id: 31190605, name: "Illusory Wall: Sage's Cave #6", category: 'illusoryWall', location: 'Mt. Gelmir' },
+  { id: 1040530651, name: 'Illusory Wall: Mirage Rise Riddle Stone', category: 'illusoryWall', location: 'Altus Plateau' },
   { id: 30080570, name: "Illusory Wall: Sainted Hero's Grave", category: 'illusoryWall', location: "Sainted Hero's Grave" },
   { id: 34120594, name: 'Illusory Wall: Sealed Tunnel #1', category: 'illusoryWall', location: 'Sealed Tunnel' },
   { id: 34120590, name: 'Illusory Wall: Sealed Tunnel #2', category: 'illusoryWall', location: 'Sealed Tunnel' },
@@ -1263,6 +1264,7 @@ export const eventFlags: EventFlag[] = [
   { id: 21020570, name: 'Illusory Wall: Specimen Storehouse Downstairs', category: 'illusoryWall', location: 'Shadow Keep' },
   { id: 28000610, name: "Illusory Wall: Midra's Manse Entry", category: 'illusoryWall', location: "Midra's Manse" },
   { id: 28000611, name: "Illusory Wall: Midra's Manse Large Portrait", category: 'illusoryWall', location: "Midra's Manse" },
+  { id: 2046480500, name: 'Illusory Wall: Ancient Ruins of Rauh', category: 'illusoryWall', location: 'Ancient Ruins of Rauh' },
   { id: 10000496, name: 'Scarab (drops Ash of War: Stormcaller)', category: 'scarab', location: 'Stormveil Castle' },
   { id: 1043370210, name: 'Scarab (drops Ash of War: Determination)', category: 'scarab', location: 'Limgrave - Agheel Lake North' },
 ]
