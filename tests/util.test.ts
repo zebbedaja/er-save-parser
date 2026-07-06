@@ -256,6 +256,40 @@ describe('getEventFlagOffset', () => {
   })
 })
 
+describe('getEventIdFromPosition', () => {
+  test('throws when bytePos is not found in any block', () => {
+    const bstMap = getBstMap()
+    // A bytePos far beyond any block in the BST
+    expect(() => getEventIdFromPosition(bstMap, 999999, 0)).toThrow(
+      /Byte position 999999 not found in any known block/
+    )
+  })
+
+  test('throws when bytePos falls in gap between blocks', () => {
+    // Block 0 covers bytes 0-125, block 1 (offset 200) covers bytes 25000-25125
+    // bytePos 200 falls in the gap
+    const bstMap = new Map([[0, 0], [1, 200]])
+    expect(() => getEventIdFromPosition(bstMap, 200, 0)).toThrow(
+      /Byte position 200 not found in any known block/
+    )
+  })
+
+  test('throws for empty BST map', () => {
+    const bstMap = new Map<number, number>()
+    expect(() => getEventIdFromPosition(bstMap, 0, 0)).toThrow(
+      /Byte position 0 not found in any known block/
+    )
+  })
+
+  test('throws when bytePos exceeds last block', () => {
+    const bstMap = new Map([[0, 0]])
+    // Block 0 covers bytes 0-125; 200 is past the block
+    expect(() => getEventIdFromPosition(bstMap, 200, 0)).toThrow(
+      /Byte position 200 not found in any known block/
+    )
+  })
+})
+
 const bits = (str: string) => new Uint8Array([parseInt(str, 2)])
 
 describe('compareUint8Arrays', () => {
