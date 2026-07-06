@@ -41,6 +41,8 @@ jobs:
       - name: Coverage Report
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          file-coverage-mode: all
 
       - name: Build
         run: npm run build
