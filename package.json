@@ -24,6 +24,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "release": "bumpp",
     "format": "prettier --write src",
@@ -35,13 +36,14 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.4",
     "@typescript/native-preview": "7.0.0-dev.20260509.2",
+    "@vitest/coverage-v8": "^4.1.9",
     "bumpp": "^11.1.0",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.9.1",
+    "prettier": "^3.9.4",
     "tsdown": "^0.22.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.62.0",
+    "typescript-eslint": "^8.62.1",
     "vitest": "^4.1.9"
   }
 }

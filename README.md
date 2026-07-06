@@ -226,7 +226,7 @@ npm run dev       # Watch mode
 
 ## TODO
 
-- Read all event flags
+- Read more event flags
 - Read equipment
 - Read inventory
 
