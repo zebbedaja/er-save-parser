@@ -37,8 +37,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Run tests and check test coverage
+      - name: Run tests
         run: npm run test:coverage 
+
+      - name: Coverage Report
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
 
       - name: Build
         run: npm run build
