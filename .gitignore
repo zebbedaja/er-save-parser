@@ -40,3 +40,4 @@ __screenshots__/
 *.timestamp-*-*.mjs
 
 opencode.json
+opencode.jsonc
