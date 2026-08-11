@@ -1,4 +1,13 @@
-import { arrayBuffersEqual, getBstMap, getEventFlagState, getMapNameFromBytes, stringToBytes, toHexString, trim } from './util'
+import {
+  arrayBuffersEqual,
+  getBstMap,
+  getEventFlagState,
+  getMapIdFromBytes,
+  getMapNameFromBytes,
+  stringToBytes,
+  toHexString,
+  trim,
+} from './util'
 import { eventFlags } from './event-flags'
 import type { ParseOptions, ProfileSummary, Save, Slot } from './types'
 import { createLogger } from './logger'
@@ -247,16 +256,19 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     offset += 256
 
     // Read Regions
-    const regionCount = dataView.getUint32(offset, true)
+    slot.regionCount = dataView.getUint32(offset, true)
     offset += 4
-    const regionIds = []
-    for (let i = 0; i < regionCount; i++) {
-      regionIds.push(dataView.getUint32(offset, true))
+
+    slot.regions = []
+    for (let i = 0; i < slot.regionCount; i++) {
+      const bytes = new Uint8Array(buffer, offset, 0x4)
+      const regionId = getMapIdFromBytes(bytes)
+      slot.regions.push({
+        regionId,
+        regionName: getMapNameFromBytes(bytes),
+      })
       offset += 4
     }
-    slot.regions = {}
-    slot.regions.regionCount = regionCount
-    slot.regions.regionIds = regionIds
 
     // Skip Torrent Data
     offset += 40

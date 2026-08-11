@@ -68,13 +68,19 @@ export interface ProfileSummary {
   startingGift?: number
 }
 
+export interface Region {
+  regionId?: string
+  regionName?: string
+}
+
 export interface Slot {
   checksum?: string
   version?: number
   mapId?: string
   mapName?: string
   character?: Character
-  regions?: { regionCount?: number; regionIds?: number[] }
+  regionCount?: number
+  regions?: Region[]
   totalDeathCount?: number
   characterType?: number
   inOnlineSessionFlag?: number

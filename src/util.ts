@@ -211,6 +211,18 @@ export const compareUint8Arrays = (a: Uint8Array, b: Uint8Array): BitDifference[
 }
 
 /**
+ * Transforms 4 bytes into a map id.
+ *
+ * @param bytes - A 4-byte Uint8Array representing the map ID
+ * @returns The map ID, or undefined if not found
+ */
+export const getMapIdFromBytes = (bytes: Uint8Array): string | undefined => {
+  if (bytes?.length !== 4) return undefined
+
+  return `m${String(bytes[3]).padStart(2, '0')}_${String(bytes[2]).padStart(2, '0')}_${String(bytes[1]).padStart(2, '0')}_${String(bytes[0]).padStart(2, '0')}`
+}
+
+/**
  * Calculate the map name from 4 bytes.
  * Bytes are in reverse order: [b0, b1, b2, b3] → m{b3}_{b2}_{b1}_{b0}
  *
@@ -218,9 +230,9 @@ export const compareUint8Arrays = (a: Uint8Array, b: Uint8Array): BitDifference[
  * @returns The map name, or undefined if not found
  */
 export const getMapNameFromBytes = (bytes: Uint8Array): string | undefined => {
-  if (bytes.length !== 4) return undefined
+  if (bytes?.length !== 4) return undefined
 
-  const id = `m${String(bytes[3]).padStart(2, '0')}_${String(bytes[2]).padStart(2, '0')}_${String(bytes[1]).padStart(2, '0')}_${String(bytes[0]).padStart(2, '0')}`
+  const id = getMapIdFromBytes(bytes)
 
   const entry = mapNames.find((m) => m.id === id)
   return entry?.name ?? undefined

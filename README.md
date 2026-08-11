@@ -143,7 +143,8 @@ async function parseFromFile(file) {
 | `version` | `number` | Slot version |
 | `mapId` | `string` | Current location map ID (hex) |
 | `character` | `Character` | Full character data |
-| `regions` | `object` | Regions visited ({ `regionCount`, `regionIds` }) |
+| `regionCount` | `number` | Number of regions visited |
+| `regions` | `Region[]` | Regions visited ({ `regionId`, `regionName` }) |
 | `totalDeathCount` | `number` | Cumulative deaths across playthroughs |
 | `characterType` | `number` | Save type indicator |
 | `inOnlineSessionFlag` | `number` | Online session flag |

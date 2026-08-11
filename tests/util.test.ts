@@ -10,6 +10,7 @@ import {
   getEventFlagOffset,
   compareUint8Arrays,
   getBstMap,
+  getMapIdFromBytes,
   getMapNameFromBytes,
 } from '../src/util'
 
@@ -395,5 +396,47 @@ describe('getMapNameFromBytes', () => {
     const bytes = new Uint8Array([])
     const result = getMapNameFromBytes(bytes)
     expect(result).toBe(undefined)
+  })
+})
+
+describe('getMapIdFromBytes', () => {
+  test('returns correct ID for [0, 37, 45, 60]', () => {
+    const bytes = new Uint8Array([0, 37, 45, 60])
+    expect(getMapIdFromBytes(bytes)).toBe('m60_45_37_00')
+  })
+
+  test('returns correct ID for [0, 0, 0, 10]', () => {
+    const bytes = new Uint8Array([0, 0, 0, 10])
+    expect(getMapIdFromBytes(bytes)).toBe('m10_00_00_00')
+  })
+
+  test('zero-pads single digit values', () => {
+    const bytes = new Uint8Array([1, 2, 3, 4])
+    expect(getMapIdFromBytes(bytes)).toBe('m04_03_02_01')
+  })
+
+  test('handles max byte values', () => {
+    const bytes = new Uint8Array([255, 255, 255, 255])
+    expect(getMapIdFromBytes(bytes)).toBe('m255_255_255_255')
+  })
+
+  test('handles all zeros', () => {
+    const bytes = new Uint8Array([0, 0, 0, 0])
+    expect(getMapIdFromBytes(bytes)).toBe('m00_00_00_00')
+  })
+
+  test('returns undefined for short array', () => {
+    const bytes = new Uint8Array([0, 0, 0])
+    expect(getMapIdFromBytes(bytes)).toBe(undefined)
+  })
+
+  test('returns undefined for empty array', () => {
+    const bytes = new Uint8Array([])
+    expect(getMapIdFromBytes(bytes)).toBe(undefined)
+  })
+
+  test('returns undefined for longer than 4 bytes', () => {
+    const bytes = new Uint8Array([0, 0, 0, 0, 1])
+    expect(getMapIdFromBytes(bytes)).toBe(undefined)
   })
 })
