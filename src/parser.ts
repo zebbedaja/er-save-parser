@@ -2,7 +2,6 @@ import {
   arrayBuffersEqual,
   getBstMap,
   getEventFlagState,
-  getMapIdFromBytes,
   getMapNameFromBytes,
   stringToBytes,
   toHexString,
@@ -262,7 +261,7 @@ export function parse(buffer: ArrayBuffer, options: ParseOptions = { logLevel: '
     slot.regions = []
     for (let i = 0; i < slot.regionCount; i++) {
       const bytes = new Uint8Array(buffer, offset, 0x4)
-      const regionId = getMapIdFromBytes(bytes)
+      const regionId = dataView.getUint32(offset, true)
       slot.regions.push({
         regionId,
         regionName: getMapNameFromBytes(bytes),

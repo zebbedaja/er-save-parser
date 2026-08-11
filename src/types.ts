@@ -69,7 +69,7 @@ export interface ProfileSummary {
 }
 
 export interface Region {
-  regionId?: string
+  regionId?: number
   regionName?: string
 }
 
