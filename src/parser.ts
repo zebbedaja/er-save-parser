@@ -1,12 +1,4 @@
-import {
-  arrayBuffersEqual,
-  getBstMap,
-  getEventFlagState,
-  getMapNameFromBytes,
-  stringToBytes,
-  toHexString,
-  trim,
-} from './util'
+import { arrayBuffersEqual, getBstMap, getEventFlagState, getMapNameFromBytes, stringToBytes, toHexString, trim } from './util'
 import { eventFlags } from './event-flags'
 import type { ParseOptions, ProfileSummary, Save, Slot } from './types'
 import { createLogger } from './logger'
